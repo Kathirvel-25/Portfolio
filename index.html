@@ -37,6 +37,8 @@
       --card-bg: rgba(18, 24, 38, 0.6);
       --card-border: 1px solid rgba(255,255,255,0.06);
       --transition: 0.3s ease;
+      /* floating particles */
+      --particle-color: rgba(0,212,255,0.15);
     }
 
     /* light theme attributes */
@@ -62,6 +64,7 @@
       --info-row-bg: rgba(0,0,0,0.05);
       --card-bg: rgba(255, 255, 255, 0.8);
       --card-border: 1px solid rgba(0,0,0,0.06);
+      --particle-color: rgba(37,99,235,0.1);
     }
 
     /* smooth transitions on all color properties */
@@ -70,7 +73,7 @@
     }
 
     /* but disable transition for cursor and some instant effects */
-    .cursor-outer, .cursor-inner, .section::before {
+    .cursor-outer, .cursor-inner, .section::before, .floating-particle {
       transition: none;
     }
 
@@ -98,13 +101,13 @@
       color: var(--text-primary);
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
-      /* strict snap mandatory */
       scroll-snap-type: y mandatory;
       scroll-snap-stop: always;
       overscroll-behavior: none;
       scroll-padding: 0;
       scrollbar-width: thin;
       scrollbar-color: var(--primary-accent) #1E2635;
+      position: relative;
     }
     body::-webkit-scrollbar {
       width: 5px;
@@ -117,7 +120,37 @@
       border-radius: 20px;
     }
 
-    /* ===== CUSTOM CYAN/BLUE GLOW CURSOR (themed) ===== */
+    /* ===== FLOATING GLOW PARTICLES ===== */
+    .particle-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .floating-particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--particle-color);
+      border-radius: 50%;
+      box-shadow: 0 0 20px 4px var(--primary-accent);
+      opacity: 0.4;
+      animation: floatGlow 18s infinite ease-in-out;
+      will-change: transform;
+    }
+    @keyframes floatGlow {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+      25% { transform: translate(30px, -20px) scale(1.6); opacity: 0.7; }
+      50% { transform: translate(60px, 10px) scale(0.9); opacity: 0.4; }
+      75% { transform: translate(90px, -30px) scale(1.3); opacity: 0.6; }
+      100% { transform: translate(120px, 0) scale(1); opacity: 0.3; }
+    }
+
+    /* ===== CUSTOM CURSOR ===== */
     .cursor-outer {
       position: fixed;
       width: 28px;
@@ -169,7 +202,7 @@
       cursor: auto;
     }
 
-    /* ===== THEME TOGGLE BUTTON (fixed top-left) ===== */
+    /* ===== THEME TOGGLE BUTTON ===== */
     .theme-toggle {
       position: fixed;
       top: clamp(16px, 3vh, 24px);
@@ -194,12 +227,6 @@
     .theme-toggle:hover {
       transform: scale(1.1);
       box-shadow: 0 0 20px var(--primary-accent);
-    }
-    .theme-toggle i {
-      transition: transform 0.3s ease;
-    }
-    .theme-toggle:active i {
-      transform: rotate(15deg);
     }
 
     /* ===== FIXED GLASS NAVIGATION ===== */
@@ -252,8 +279,6 @@
       0% { width: 0; opacity: 0; }
       100% { width: 70%; opacity: 1; }
     }
-
-    /* Resume link special styling */
     .nav-item.resume-link {
       background: var(--primary-accent);
       color: #0B0F1A;
@@ -271,7 +296,7 @@
       color: white;
     }
 
-    /* ===== VERTICAL SECTIONS (snap) ===== */
+    /* ===== VERTICAL SECTIONS ===== */
     .section {
       min-height: 100vh;
       max-height: 100vh;
@@ -299,7 +324,7 @@
       transition: background var(--transition);
     }
 
-    /* ===== GLOBAL GLASS CARD (identical for all) ===== */
+    /* ===== GLOBAL GLASS CARD ===== */
     .glass-card {
       position: relative;
       z-index: 2;
@@ -319,7 +344,7 @@
     .section .glass-card {
       opacity: 0;
       transform: translateY(40px) scale(0.98);
-      transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.6s cubic-bezier(0.4,0,0.2,1);
+      transition: opacity 0.7s cubic-bezier(0.2,0.9,0.3,1), transform 0.7s cubic-bezier(0.2,0.9,0.3,1);
     }
     .section.in-view .glass-card {
       opacity: 1;
@@ -383,7 +408,7 @@
       font-size: clamp(15px, 1.3vw, 17px);
     }
 
-    /* ===== SKILLS (spotlight with themed colors) ===== */
+    /* ===== SKILLS ===== */
     .skills-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -428,7 +453,66 @@
       background: var(--glass-bg);
     }
 
-    /* ===== PROJECTS – PROFESSIONAL FIX WITH PROPER CONTAINMENT ===== */
+    /* ===== EDUCATION – TIMELINE STYLE ===== */
+    .timeline-education {
+      position: relative;
+      padding-left: 2.2rem;
+      border-left: 2px solid var(--primary-accent);
+      box-shadow: 0 0 15px var(--primary-accent);
+      margin-left: 1rem;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2.2rem;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -2.6rem;
+      top: 0.2rem;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary-accent);
+      box-shadow: 0 0 20px var(--primary-accent);
+    }
+    .timeline-year {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--secondary-accent);
+      letter-spacing: 1px;
+      margin-bottom: 0.3rem;
+    }
+    .timeline-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--heading-color);
+    }
+    .timeline-sub {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin: 0.3rem 0 0.8rem 0;
+    }
+    .edu-stats {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      background: var(--info-row-bg);
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      width: fit-content;
+    }
+    .edu-stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+    .edu-stat-item i {
+      color: var(--secondary-accent);
+    }
+
+    /* ===== PROJECTS – VISUAL UPGRADE (GLOW ONLY ON HOVER) ===== */
     #projects .glass-card {
       display: flex;
       flex-direction: column;
@@ -436,29 +520,17 @@
       width: 100%;
       padding: clamp(1.8rem, 5vw, 4rem);
     }
-
-    .projects-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
     .projects-header h2 {
       color: var(--primary-accent);
-      font-weight: 700;
-      margin-bottom: 0;
-      font-size: clamp(32px, 4.5vw, 48px);
-      
+      margin-bottom: 1rem;
     }
-
-    /* CRITICAL FIX: Container with padding for hover space */
     .slider-container {
       position: relative;
       width: 100%;
-      overflow: visible; /* Allow hover effects to be visible */
-      padding: 2rem 0; /* Add vertical padding for hover space */
-      margin: -1rem 0; /* Offset padding to maintain layout */
+      overflow: visible;
+      padding: 2rem 0;
+      margin: -1rem 0;
     }
-
     .slides-track {
       display: flex;
       flex-direction: row;
@@ -467,17 +539,16 @@
       will-change: transform;
       gap: 0;
     }
-
     .slide {
       flex: 0 0 100%;
       width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 0 1rem; /* Add horizontal padding for card spacing */
+      padding: 0 1rem;
     }
 
-    /* PROFESSIONAL CARD DESIGN */
+    /* PROFESSIONAL CARD DESIGN - NORMAL STATE (NO OUTER GLOW) */
     .project-card {
       background: var(--card-bg);
       backdrop-filter: blur(8px);
@@ -487,46 +558,103 @@
       padding: 2.5rem;
       width: 100%;
       max-width: 800px;
-      box-shadow: var(--shadow);
-      transition: all 0.4s cubic-bezier(0.2, 0, 0, 1); /* Smooth professional transition */
+      box-shadow: var(--shadow);  /* only inner shadow, no spread glow */
+      transition: all 0.4s cubic-bezier(0.2, 0, 0, 1);
       opacity: 0.85;
-      transform: scale(0.98);
+      transform: scale(0.98) translateY(0);
       color: var(--text-primary);
       transform-origin: center center;
       margin: 0 auto;
-      /* Ensure card doesn't overflow its bounds */
-      box-sizing: border-box;
     }
-
     .project-card.active-card {
       opacity: 1;
-      transform: scale(1);
-      box-shadow: 0 0 35px var(--primary-accent), 0 0 0 1px var(--primary-accent);
+      transform: scale(1) translateY(0);
+      /* active card (center) gets a subtle accent border but NO huge glow */
       border-color: var(--primary-accent);
+      box-shadow: var(--shadow); 
     }
 
-    /* FIXED HOVER: Scale from center without moving up */
+    /* HOVER EFFECT: ONLY THE HOVERED CARD gets the outer glow and lift — exactly like skills section */
     .project-card:hover {
-      transform: scale(1.02);
+      transform: scale(1.03) translateY(-6px);
       border-color: var(--primary-accent);
-      box-shadow: 0 0 50px var(--primary-accent);
-      z-index: 10; /* Ensure hovered card is above others */
+      box-shadow: 0 20px 40px rgba(0,212,255,0.3), 0 0 0 2px var(--primary-accent);
+      z-index: 10;
+      opacity: 1;
+    }
+
+    /* Optional: When hovering the container, slightly dim non-hovered cards for focus */
+    .slider-container:hover .project-card:not(:hover) {
+      opacity: 0.6;
+      filter: blur(0.5px);
+      transition: all 0.3s ease;
     }
 
     .project-title {
       font-size: clamp(1.6rem, 3vw, 2.5rem);
       font-weight: 700;
       color: var(--primary-accent);
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       line-height: 1.2;
     }
-
+    .tech-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.5rem 0 1rem 0;
+    }
+    .tech-badge {
+      background: var(--skill-tag-bg);
+      border: var(--skill-tag-border);
+      border-radius: 30px;
+      padding: 0.2rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--primary-accent);
+      letter-spacing: 0.3px;
+    }
     .project-desc {
       font-size: clamp(0.95rem, 1.2vw, 1.1rem);
       color: var(--text-secondary);
       line-height: 1.7;
+      margin-bottom: 1.8rem;
     }
-
+    .project-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .project-btn {
+      background: transparent;
+      border: 1px solid var(--primary-accent);
+      color: var(--primary-accent);
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    .project-btn i {
+      font-size: 1rem;
+    }
+    .project-btn:hover {
+      background: var(--primary-accent);
+      color: #0B0F1A;
+      box-shadow: 0 0 15px var(--primary-accent);
+    }
+    .github-icon-link {
+      color: var(--text-secondary);
+      font-size: 1.6rem;
+      transition: 0.2s;
+    }
+    .github-icon-link:hover {
+      color: var(--primary-accent);
+      transform: scale(1.15);
+    }
     .progress-container {
       width: 100%;
       height: 4px;
@@ -544,71 +672,27 @@
       transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* ===== EDUCATION ===== */
-    .academic-block {
-      background: var(--card-bg);
-      border: var(--card-border);
-      border-radius: 28px;
-      padding: clamp(1.5rem,3vw,2.5rem);
-      backdrop-filter: blur(8px);
-      margin: 1rem 0;
-    }
-    .academic-degree {
-      font-size: clamp(1.4rem,2.5vw,2rem);
-      color: var(--primary-accent);
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-    }
-    .academic-meta {
-      color: var(--secondary-accent);
-      font-size: clamp(1rem,1.5vw,1.2rem);
-      margin-bottom: 1rem;
-    }
-    .academic-detail {
-      color: var(--text-secondary);
-      font-size: clamp(0.9rem,1.2vw,1rem);
-      line-height: 1.6;
-    }
-    hr {
-      border: 0.5px solid var(--text-secondary);
-      margin: 1.5rem 0;
-      opacity: 0.2;
-    }
-
     /* ===== MOBILE ADAPT ===== */
     @media (max-width: 700px) {
       .info-row { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
-      .nav-bar { 
-        gap: 8px; 
-        padding: 6px 12px; 
-        right: 10px;
-      }
-      .nav-item { 
-        font-size: 0.85rem; 
-        padding: 4px 0;
-      }
-      .nav-item.resume-link {
-        padding: 4px 10px;
-        font-size: 0.8rem;
-      }
-      .project-card {
-        padding: 1.5rem;
-      }
-      .slider-container {
-        padding: 1rem 0;
-        margin: -0.5rem 0;
-      }
-      .project-card:hover {
-        transform: scale(1.01);
-      }
+      .nav-bar { gap: 8px; padding: 6px 12px; right: 10px; }
+      .nav-item { font-size: 0.85rem; padding: 4px 0; }
+      .nav-item.resume-link { padding: 4px 10px; font-size: 0.8rem; }
+      .project-card { padding: 1.5rem; }
+      .slider-container { padding: 1rem 0; margin: -0.5rem 0; }
+      .project-card:hover { transform: scale(1.01) translateY(-3px); }
+      .timeline-education { padding-left: 1.2rem; }
+      .timeline-dot { left: -1.8rem; }
     }
   </style>
 </head>
 <body data-theme="dark">
+  <!-- floating glow particles -->
+  <div class="particle-container" id="particleContainer"></div>
+
   <div class="cursor-outer" id="cursorOuter"></div>
   <div class="cursor-inner" id="cursorInner"></div>
 
-  <!-- theme toggle button (fixed top-left) -->
   <div class="theme-toggle" id="themeToggle">
     <i class="fas fa-moon" id="themeIcon"></i>
   </div>
@@ -618,13 +702,9 @@
     <span class="nav-item" data-target="skills">Skills</span>
     <span class="nav-item" data-target="projects">Projects</span>
     <span class="nav-item" data-target="education">Education</span>
-    <!-- Resume Link that opens PDF -->
-    <a href="Resume.pdf"
-   class="nav-item resume-link"
-   download="Kathirvel_A_Resume.pdf">
-   <i class="fas fa-file-pdf" style="margin-right: 5px;"></i>
-   Resume
-</a>
+    <a href="Resume.pdf" class="nav-item resume-link" download="Kathirvel_A_Resume.pdf">
+      <i class="fas fa-file-pdf" style="margin-right: 5px;"></i> Resume
+    </a>
   </nav>
 
   <!-- HOME -->
@@ -639,7 +719,7 @@
         <span class="info-item"><a href="https://www.linkedin.com/in/kathirvel-a-121865299" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a></span>
       </div>
       <div class="home-description">
-        Embedded systems enthusiast with strong hands-on experience in STM32, ESP32, and bare-metal Embedded C programming. Skilled in real-time system design, interrupt-driven architecture, and hardware-software integration. Seeking product development opportunities in embedded engineering roles.
+        Embedded systems enthusiast with strong hands-on experience in STM32, ESP32, and bare-metal Embedded C programming. Skilled in real-time system design, interrupt-driven architecture, and hardware-software integration.
       </div>
     </div>
   </section>
@@ -660,64 +740,115 @@
     </div>
   </section>
 
-  <!-- PROJECTS – PROFESSIONALLY FIXED HOVER -->
+  <!-- PROJECTS – VISUAL (GLOW ONLY ON HOVER) -->
   <section id="projects" class="section" data-section="projects">
     <div class="glass-card" id="projectGlass">
       <div class="projects-header">
         <h2>Projects</h2>
       </div>
-
       <div class="slider-container">
         <div class="slides-track" id="slidesTrack">
+          <!-- slide 0 -->
           <div class="slide" data-index="0">
             <div class="project-card" id="card0">
-              <div class="project-title">Thought-to-Motion: Brain-Controlled Wheelchair System</div>
-              <div class="project-desc">Real‑time assistive system converting EEG/EOG biomedical signals into directional PWM commands via BioAmp EXG & L298N. Demonstrated wheelchair motion based on brain/eye signals with high responsiveness.</div>
+              <div class="project-title">Thought-to-Motion</div>
+              <div class="tech-badges">
+                <span class="tech-badge">STM32</span><span class="tech-badge">BioAmp EXG</span><span class="tech-badge">PWM</span><span class="tech-badge">L298N</span>
+              </div>
+              <div class="project-desc">Real‑time assistive system converting EEG/EOG signals into directional PWM commands via BioAmp EXG & L298N.</div>
+              <div class="project-actions">
+                <a href="#" class="project-btn"><i class="fas fa-eye"></i> View Details</a>
+                <a href="#" class="github-icon-link"><i class="fab fa-github"></i></a>
+              </div>
             </div>
           </div>
+          <!-- slide 1 -->
           <div class="slide" data-index="1">
             <div class="project-card" id="card1">
-              <div class="project-title">STM32-Based Data Logger</div>
-              <div class="project-desc">Acquired GPS & analog sensor data using ADC, displayed via USART2, interrupt‑driven operation, and stored in W25Q64 SPI flash. Reliable embedded logging with low-power optimization.</div>
+              <div class="project-title">STM32 Data Logger</div>
+              <div class="tech-badges">
+                <span class="tech-badge">STM32</span><span class="tech-badge">ADC</span><span class="tech-badge">USART</span><span class="tech-badge">SPI Flash</span><span class="tech-badge">Low Power</span>
+              </div>
+              <div class="project-desc">Acquired GPS & analog sensor data using ADC, displayed via USART2, stored in W25Q64 SPI flash.</div>
+              <div class="project-actions">
+                <a href="#" class="project-btn"><i class="fas fa-eye"></i> View Details</a>
+                <a href="#" class="github-icon-link"><i class="fab fa-github"></i></a>
+              </div>
             </div>
           </div>
+          <!-- slide 2 -->
           <div class="slide" data-index="2">
             <div class="project-card" id="card2">
-              <div class="project-title">ESP32 IoT Gas Leakage Monitoring System</div>
-              <div class="project-desc">Threshold‑based alert system with gas sensor, I2C LCD, buzzer/LED, and wireless remote monitoring. Real‑time cloud connectivity and on‑device alarm with push notifications.</div>
+              <div class="project-title">ESP32 IoT Gas Leakage</div>
+              <div class="tech-badges">
+                <span class="tech-badge">ESP32</span><span class="tech-badge">I2C LCD</span><span class="tech-badge">Cloud</span><span class="tech-badge">Buzzer</span>
+              </div>
+              <div class="project-desc">Threshold‑based alert with gas sensor, I2C LCD, buzzer, and wireless remote monitoring.</div>
+              <div class="project-actions">
+                <a href="#" class="project-btn"><i class="fas fa-eye"></i> View Details</a>
+                <a href="#" class="github-icon-link"><i class="fab fa-github"></i></a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
       <div class="progress-container">
         <div class="progress-fill" id="progressFill"></div>
       </div>
     </div>
   </section>
 
-  <!-- EDUCATION -->
+  <!-- EDUCATION – TIMELINE -->
   <section id="education" class="section" data-section="education">
     <div class="glass-card">
       <h2><span class="accent">Academics</span></h2>
-      <div class="academic-block">
-        <div class="academic-degree">B.E. Electronics and Communication Engineering</div>
-        <div class="academic-meta">Government College of Engineering, Salem · 2022–2026</div>
-        <div class="academic-detail">
-          <p>CGPA: 7.81 </p>
+      <div class="timeline-education">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2022 — 2026</div>
+          <div class="timeline-title">🎓 B.E Electronics</div>
+          <div class="timeline-sub">📍 Government College of Engineering, Salem</div>
+          <div class="edu-stats">
+            <span class="edu-stat-item"><i class="fas fa-star"></i> CGPA: 7.81</span>
+          </div>
         </div>
-        <br>
-        <div class="academic-degree">Higher secondary (HSE)</div>
-        <div class="academic-meta">Lakshmi Matriculation Hr Sec School</div>
-        <p>Mark: 93.4% </p>
+        <div class="timeline-item" style="margin-bottom:0;">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2020 — 2022</div>
+          <div class="timeline-title">📘 Higher Secondary (HSE)</div>
+          <div class="timeline-sub">📍 Lakshmi Matriculation Hr Sec School</div>
+          <div class="edu-stats">
+            <span class="edu-stat-item"><i class="fas fa-percent"></i> Percentage: 93.4%</span>
+          </div>
+        </div>
       </div>
-      <hr>
+      <hr style="margin-top:2rem;">
     </div>
   </section>
 
   <script>
     (function() {
       "use strict";
+
+      // ---- Floating particles ----
+      function createParticles() {
+        const container = document.getElementById('particleContainer');
+        if (!container) return;
+        const count = 15;
+        for (let i = 0; i < count; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'floating-particle';
+          const size = Math.random() * 12 + 4;
+          particle.style.width = size + 'px';
+          particle.style.height = size + 'px';
+          particle.style.left = Math.random() * 100 + '%';
+          particle.style.top = Math.random() * 100 + '%';
+          particle.style.animationDelay = Math.random() * 10 + 's';
+          particle.style.animationDuration = (Math.random() * 15 + 12) + 's';
+          container.appendChild(particle);
+        }
+      }
+      createParticles();
 
       // ----- THEME TOGGLE -----
       const themeToggle = document.getElementById('themeToggle');
@@ -726,17 +857,11 @@
 
       function setTheme(theme) {
         body.setAttribute('data-theme', theme);
-        if (theme === 'dark') {
-          themeIcon.className = 'fas fa-moon';
-        } else {
-          themeIcon.className = 'fas fa-sun';
-        }
+        themeIcon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
       }
-
       themeToggle.addEventListener('click', () => {
         const currentTheme = body.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        setTheme(newTheme);
+        setTheme(currentTheme === 'dark' ? 'light' : 'dark');
       });
 
       // ----- CURSOR -----
@@ -761,7 +886,7 @@
           requestAnimationFrame(animateCursor);
         }
         document.addEventListener('mousemove', updateCursor);
-        const interactive = document.querySelectorAll('.nav-item, .skill-category, .project-card, .info-item a, .academic-block, .theme-toggle');
+        const interactive = document.querySelectorAll('.nav-item, .skill-category, .project-card, .info-item a, .theme-toggle, .project-btn, .github-icon-link');
         interactive.forEach(el => {
           el.addEventListener('mouseenter', () => { cursorOuter?.classList.add('cursor-hover'); cursorInner?.classList.add('cursor-hover'); });
           el.addEventListener('mouseleave', () => { cursorOuter?.classList.remove('cursor-hover'); cursorInner?.classList.remove('cursor-hover'); });
@@ -771,97 +896,65 @@
         animateCursor();
       }
 
-      // ----- SLIDER ENGINE -----
+      // ----- SLIDER (unchanged) -----
       const track = document.getElementById('slidesTrack');
       const slides = document.querySelectorAll('.slide');
       const cards = document.querySelectorAll('.project-card');
       const progressFill = document.getElementById('progressFill');
       const glassContainer = document.getElementById('projectGlass');
-      
       let currentIndex = 0;
       const totalSlides = slides.length;
       let isInside = false;
       let wheelTimeout = null;
-      let touchStartX = 0;
-      let touchEndX = 0;
+      let touchStartX = 0, touchEndX = 0;
       const swipeThreshold = 50;
 
       function updateSlider(index) {
         if (index < 0) index = 0;
         if (index >= totalSlides) index = totalSlides - 1;
         currentIndex = index;
-        const translateX = -currentIndex * 100;
-        track.style.transform = `translateX(${translateX}%)`;
-        
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
         cards.forEach((card, i) => {
           if (i === currentIndex) card.classList.add('active-card');
           else card.classList.remove('active-card');
         });
-        
-        const progress = ((currentIndex + 1) / totalSlides) * 100;
-        progressFill.style.width = `${progress}%`;
+        progressFill.style.width = `${((currentIndex + 1) / totalSlides) * 100}%`;
       }
 
       if (glassContainer) {
         glassContainer.addEventListener('mouseenter', () => { isInside = true; });
         glassContainer.addEventListener('mouseleave', () => { isInside = false; });
-      }
-
-      window.addEventListener('keydown', (e) => {
-        if (!isInside) return;
-        const projectsSection = document.getElementById('projects');
-        const rect = projectsSection.getBoundingClientRect();
-        const vh = window.innerHeight;
-        const visible = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
-        if (visible < vh * 0.3) return;
-        
-        if (e.key === 'ArrowLeft') {
-          e.preventDefault();
-          updateSlider(currentIndex - 1);
-        } else if (e.key === 'ArrowRight') {
-          e.preventDefault();
-          updateSlider(currentIndex + 1);
-        }
-      });
-
-      if (glassContainer) {
         glassContainer.addEventListener('wheel', (e) => {
           if (!isInside) return;
           e.preventDefault();
-          
           if (wheelTimeout) clearTimeout(wheelTimeout);
-          
           if (Math.abs(e.deltaY) > 60) {
-            if (e.deltaY > 0) {
-              if (currentIndex < totalSlides - 1) updateSlider(currentIndex + 1);
-            } else {
-              if (currentIndex > 0) updateSlider(currentIndex - 1);
-            }
+            if (e.deltaY > 0) { if (currentIndex < totalSlides - 1) updateSlider(currentIndex + 1); } 
+            else { if (currentIndex > 0) updateSlider(currentIndex - 1); }
             wheelTimeout = setTimeout(() => {}, 100);
           }
         }, { passive: false });
-
-        glassContainer.addEventListener('touchstart', (e) => {
-          if (!isInside) return;
-          touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-        
+        glassContainer.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
         glassContainer.addEventListener('touchend', (e) => {
-          if (!isInside) return;
           touchEndX = e.changedTouches[0].screenX;
           const diff = touchStartX - touchEndX;
-          
           if (Math.abs(diff) > swipeThreshold) {
-            if (diff > 0) {
-              if (currentIndex < totalSlides - 1) updateSlider(currentIndex + 1);
-            } else {
-              if (currentIndex > 0) updateSlider(currentIndex - 1);
-            }
+            if (diff > 0) { if (currentIndex < totalSlides - 1) updateSlider(currentIndex + 1); } 
+            else { if (currentIndex > 0) updateSlider(currentIndex - 1); }
           }
         }, { passive: true });
       }
-
       updateSlider(0);
+
+      window.addEventListener('keydown', (e) => {
+        if (!isInside) return;
+        const rect = document.getElementById('projects').getBoundingClientRect();
+        const vh = window.innerHeight;
+        const visible = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
+        if (visible < vh * 0.3) return;
+        if (e.key === 'ArrowLeft') { e.preventDefault(); updateSlider(currentIndex - 1); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); updateSlider(currentIndex + 1); }
+      });
 
       // ----- INTERSECTION OBSERVER -----
       const sections = document.querySelectorAll('.section');
@@ -875,33 +968,21 @@
             const sectionId = section.getAttribute('data-section');
             navItems.forEach(item => {
               const target = item.getAttribute('data-target');
-              if (target) { // Only for non-resume nav items
-                item.classList.toggle('active', target === sectionId);
-              }
+              if (target) item.classList.toggle('active', target === sectionId);
             });
           } else {
-            const rect = section.getBoundingClientRect();
-            const vh = window.innerHeight;
-            if (rect.bottom < 0 || rect.top > vh) {
+            if (entry.boundingClientRect.bottom < 0 || entry.boundingClientRect.top > window.innerHeight)
               section.classList.remove('in-view');
-            }
           }
         });
-        const anyInView = Array.from(sections).some(s => s.classList.contains('in-view'));
-        if (!anyInView) {
-          navItems.forEach(i => {
-            if (i.getAttribute('data-target')) i.classList.remove('active');
-          });
-        }
       }, observerOptions);
       sections.forEach(section => observer.observe(section));
 
       navItems.forEach(item => {
-        if (item.getAttribute('data-target')) { // Only for section nav items
+        if (item.getAttribute('data-target')) {
           item.addEventListener('click', () => {
             const targetId = item.getAttribute('data-target');
-            const targetSection = document.getElementById(targetId);
-            if (targetSection) targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
         }
       });
@@ -914,11 +995,7 @@
           const visible = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
           if (visible / vh >= 0.3) {
             homeSection.classList.add('in-view');
-            navItems.forEach(item => {
-              if (item.getAttribute('data-target') === 'home') {
-                item.classList.add('active');
-              }
-            });
+            navItems.forEach(item => { if (item.getAttribute('data-target') === 'home') item.classList.add('active'); });
           }
         }, 150);
       });
