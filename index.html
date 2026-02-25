@@ -240,6 +240,33 @@
       100% { width: 70%; opacity: 1; }
     }
 
+    /* ===== PORTFOLIO BRANDING (top-left corner, reduced glow) ===== */
+    .hero-brand {
+      position: fixed;
+      top: 15px;
+      left: 50px;
+      z-index: 9998;
+      font-size: clamp(32px, 5vw, 64px);
+      letter-spacing: 3px;
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .brand-port {
+      color: var(--primary-accent);
+      text-shadow: 0 0 8px var(--primary-accent); /* reduced from 20px to 8px */
+      font-weight: 800;
+    }
+    .brand-folio {
+      color: #E6EDF3;
+      margin-left: 8px;
+      font-weight: 600;
+      opacity: 0.99;
+    }
+    .hero-brand.hidden {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
     /* ===== VERTICAL SECTIONS ===== */
     .section {
       min-height: 100vh;
@@ -398,7 +425,7 @@
     .progress-container { width: 100%; height: 4px; background: var(--progress-bg); border-radius: 4px; overflow: hidden; margin-top: 2rem; }
     .progress-fill { height: 100%; width: 0%; background: var(--primary-accent); border-radius: 4px; box-shadow: 0 0 15px var(--primary-accent); transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
 
-    /* ===== RESUME SECTION (only preview image replaced) ===== */
+    /* ===== RESUME SECTION (unchanged) ===== */
     #resume .glass-card { padding: 2.5rem; }
     .resume-split { display: flex; gap: 2.5rem; align-items: center; }
     .resume-preview { flex: 1; perspective: 1200px; }
@@ -421,8 +448,10 @@
       box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
       position: relative;
       overflow: hidden;
+      padding: 0; /* ensure no extra spacing */
     }
-    /* inline styles for image will be applied via style attribute */
+    .preview-image i { font-size: 3rem; opacity: 0.6; margin-right: 0.5rem; }
+    .preview-image span { letter-spacing: 0.5px; }
     .preview-badge { display: inline-block; background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.3); padding: 0.3rem 1rem; border-radius: 30px; font-size: 0.75rem; color: var(--primary-accent); font-weight: 500; }
     .resume-content { flex: 1; }
     .resume-content h2 { margin-bottom: 0.5rem; }
@@ -456,10 +485,16 @@
       .timeline-education { padding-left: 1.2rem; }
       .timeline-dot { left: -1.8rem; }
       .cursor-light { display: none; }
+      .hero-brand { top: 20px; left: 20px; font-size: 28px; }
     }
   </style>
 </head>
 <body>
+  <!-- PORTFOLIO branding (top-left corner, reduced glow) -->
+  <div id="heroBrand" class="hero-brand">
+    <span class="brand-port">PORT</span><span class="brand-folio">FOLIO</span>
+  </div>
+
   <div class="cursor-light" id="cursorLight"></div>
   <div class="particle-container" id="particleContainer"></div>
   <div class="cursor-outer" id="cursorOuter"></div>
@@ -542,7 +577,9 @@
               <div class="project-desc">Acquired GPS & analog sensor data using ADC, displayed via USART2, stored in W25Q64 SPI flash.</div>
               <div class="project-actions">
                 <!-- View Details button opens documentation file -->
-                <a href="Data.pdf" target="_blank" rel="noopener noreferrer" class="project-btn"><i class="fas fa-eye"></i> View Details</a>
+                <a href="Data.pdf" target="_blank" rel="noopener noreferrer" class="project-btn">
+                  <i class="fas fa-eye"></i> View Details
+                </a>
                 <!-- GitHub icon opens repository -->
                 <a href="https://github.com/Kathirvel-25/Datalogger-using-STM32" target="_blank" rel="noopener noreferrer" class="github-icon-link"><i class="fab fa-github"></i></a>
               </div>
@@ -583,14 +620,14 @@
     </div>
   </section>
 
-  <!-- RESUME SECTION – with Resume.jpg image inserted -->
+  <!-- RESUME SECTION – with actual resume image -->
   <section id="resume" class="section" data-section="resume">
     <div class="glass-card">
       <div class="resume-split">
         <div class="resume-preview">
           <div class="preview-card">
             <div class="preview-image">
-              <!-- Replaced icon + span with image -->
+              <!-- Image inserted here, icon and span removed -->
               <img src="Resume.png" alt="Kathirvel Resume Preview" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -717,8 +754,9 @@
       const cards = document.querySelectorAll('.project-card');
       const progressFill = document.getElementById('progressFill');
       const glassContainer = document.getElementById('projectGlass');
-      let currentIndex = 0, totalSlides = slides.length, isInside = false, wheelTimeout = null;
+      let currentIndex = 0, totalSlides = slides.length, isInside = false;
       let touchStartX = 0, touchEndX = 0, swipeThreshold = 50;
+      
       function updateSlider(index) {
         if (index < 0) index = 0;
         if (index >= totalSlides) index = totalSlides - 1;
@@ -727,17 +765,24 @@
         cards.forEach((card, i) => { if (i === currentIndex) card.classList.add('active-card'); else card.classList.remove('active-card'); });
         progressFill.style.width = `${((currentIndex + 1) / totalSlides) * 100}%`;
       }
+      
       if (glassContainer) {
         glassContainer.addEventListener('mouseenter', () => { isInside = true; });
         glassContainer.addEventListener('mouseleave', () => { isInside = false; });
+        
+        // MODIFIED WHEEL EVENT: horizontal scroll using vertical wheel
         glassContainer.addEventListener('wheel', (e) => {
-          if (!isInside) return; e.preventDefault();
-          if (wheelTimeout) clearTimeout(wheelTimeout);
-          if (Math.abs(e.deltaY) > 60) {
-            if (e.deltaY > 0) { if (currentIndex < totalSlides - 1) updateSlider(currentIndex + 1); } else { if (currentIndex > 0) updateSlider(currentIndex - 1); }
-            wheelTimeout = setTimeout(() => {}, 100);
+          if (!isInside) return;
+          e.preventDefault(); // prevent page scroll
+          if (e.deltaY > 0) {
+            // scroll down → next slide
+            updateSlider(currentIndex + 1);
+          } else if (e.deltaY < 0) {
+            // scroll up → previous slide
+            updateSlider(currentIndex - 1);
           }
         }, { passive: false });
+        
         glassContainer.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
         glassContainer.addEventListener('touchend', (e) => {
           touchEndX = e.changedTouches[0].screenX;
@@ -749,7 +794,23 @@
       }
       updateSlider(0);
 
-      // Intersection Observer
+      // ----- PORTFOLIO BRAND VISIBILITY (home only) -----
+      const heroBrand = document.getElementById('heroBrand');
+      const homeSection = document.getElementById('home');
+      const brandObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.target.id === 'home') {
+            if (entry.isIntersecting) {
+              heroBrand.classList.remove('hidden');
+            } else {
+              heroBrand.classList.add('hidden');
+            }
+          }
+        });
+      }, { threshold: 0.4 });
+      brandObserver.observe(homeSection);
+
+      // Intersection Observer for nav
       const sections = document.querySelectorAll('.section');
       const navItems = document.querySelectorAll('.nav-item');
       const observerOptions = { root: null, threshold: 0.3 };
@@ -777,6 +838,25 @@
             const targetId = item.getAttribute('data-target');
             document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
+        }
+      });
+
+      // ----- KEYBOARD ARROW NAVIGATION FOR PROJECT SLIDER -----
+      window.addEventListener('keydown', function(e) {
+        // Only activate when projects section is in view (optional but good UX)
+        const projectsSection = document.getElementById('projects');
+        const rect = projectsSection.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const visible = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
+        if (visible < vh * 0.3) return; // not enough visible
+        
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          updateSlider(currentIndex + 1);
+        }
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          updateSlider(currentIndex - 1);
         }
       });
 
