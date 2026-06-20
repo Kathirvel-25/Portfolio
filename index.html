@@ -71,6 +71,18 @@
       height: 100%;
       width: 100%;
       background: var(--bg-body);
+      font-size: 16px;
+    }
+
+    /* Scaling for laptops and smaller screens */
+    @media (max-width: 1440px) {
+      html { font-size: 90%; }
+    }
+    @media (max-width: 1024px), (max-height: 800px) {
+      html { font-size: 80%; }
+    }
+    @media (max-width: 768px) {
+      html { font-size: 85%; }
     }
 
     body {
@@ -364,20 +376,18 @@
     /* ===== VERTICAL SECTIONS ===== */
     .section {
       min-height: 100vh;
-      max-height: 100vh;
-      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      contain: layout paint size style;
       scroll-snap-align: start;
       scroll-snap-stop: always;
+      padding: clamp(80px, 10vh, 120px) clamp(1rem, 2.5vw, 2rem);
+      box-sizing: border-box;
       isolation: isolate;
       overflow: hidden;
       width: 100%;
       flex-shrink: 0;
-      padding: clamp(1rem, 2.5vw, 2rem);
     }
 
     .section::before {
@@ -1147,18 +1157,19 @@
     /* ----- SKILLS (unchanged) ----- */
     .skills-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1.2rem;
-      margin: 1.5rem 0;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
     }
 
     .skill-category {
-      background: var(--skill-category-bg);
-      border: 1px solid rgba(255, 255, 255, 0.02);
-      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(13, 18, 28, 0.7), rgba(0, 212, 255, 0.05));
+      border: 1px solid rgba(0, 212, 255, 0.15);
+      border-radius: 20px;
       padding: clamp(1.2rem, 2vw, 1.6rem) clamp(1rem, 1.5vw, 1.2rem);
-      transition: transform 0.3s ease, box-shadow 0.3s;
+      transition: transform 0.3s ease, box-shadow 0.3s, border-color 0.3s;
       z-index: 2;
+      backdrop-filter: blur(8px);
     }
 
     .skill-category h3 {
@@ -3053,6 +3064,7 @@
   <nav class="nav-bar">
     <span class="nav-item" data-target="home">Home</span>
     <span class="nav-item" data-target="skills">Skills</span>
+    <span class="nav-item" data-target="internship">Internship</span>
     <span class="nav-item" data-target="projects">Projects</span>
     <span class="nav-item" data-target="education">Education</span>
     <span class="nav-item" data-target="resume">Resume</span>
@@ -3129,44 +3141,94 @@
       <h2><span class="accent">Skills</span></h2>
       <div class="skills-grid">
         <div class="skill-category">
-          <h3>Languages</h3>
+          <h3 style="display: flex; align-items: center;"><i class="fas fa-code" style="color: var(--secondary-accent); margin-right: 8px;"></i> Languages</h3>
           <div class="skill-items"><span class="skill-tag">C/C++</span><span class="skill-tag">Embedded C</span><span
               class="skill-tag">Bare-metal</span></div>
         </div>
         <div class="skill-category">
-          <h3>MPU</h3>
+          <h3 style="display: flex; align-items: center;"><i class="fas fa-microchip" style="color: var(--secondary-accent); margin-right: 8px;"></i> MPU</h3>
           <div class="skill-items"><span class="skill-tag">STM32 (ARM M4)</span><span
               class="skill-tag">ESP32</span><span class="skill-tag">Arduino</span></div>
         </div>
         <div class="skill-category">
-          <h3>Protocols</h3>
+          <h3 style="display: flex; align-items: center;"><i class="fas fa-network-wired" style="color: var(--secondary-accent); margin-right: 8px;"></i> Protocols</h3>
           <div class="skill-items"><span class="skill-tag">UART</span><span class="skill-tag">SPI</span><span
               class="skill-tag">I2C</span></div>
         </div>
         <div class="skill-category">
-          <h3>Peripherals</h3>
-          <div class="skill-items"><span class="skill-tag">ADC/DAC</span><span class="skill-tag">Timers</span></div>
-          <span class="skill-tag">PWM</span></div>
+          <h3 style="display: flex; align-items: center;"><i class="fas fa-cogs" style="color: var(--secondary-accent); margin-right: 8px;"></i> Peripherals</h3>
+          <div class="skill-items"><span class="skill-tag">ADC/DAC</span><span class="skill-tag">Timers</span><span class="skill-tag">PWM</span></div>
         </div>
         <div class="skill-category">
-          <h3>Tools</h3>
+          <h3 style="display: flex; align-items: center;"><i class="fas fa-tools" style="color: var(--secondary-accent); margin-right: 8px;"></i> Tools</h3>
           <div class="skill-items"><span class="skill-tag">STM32CubeIDE</span><span class="skill-tag">VS
               Code</span><span class="skill-tag">STM32CubeMX</span><span class="skill-tag">Fusion 360</span></div>
         </div>
         <div class="skill-category">
-          <h3>Additional</h3>
-          <div class="skill-items"><span class="skill-tag">Linux</span><span class="skill-tag">Robot Operating System</span></div>
-          <span class="skill-tag">FreeRTOS</span></div>
+          <h3 style="display: flex; align-items: center;"><i class="fas fa-layer-group" style="color: var(--secondary-accent); margin-right: 8px;"></i> Additional</h3>
+          <div class="skill-items"><span class="skill-tag">Linux</span><span class="skill-tag">Robot Operating System</span><span class="skill-tag">FreeRTOS</span></div>
         </div>
-      </div>
         <div class="skill-category">
-          <h3>Debuging and Tools</h3>
-          <div class="skill-items"><span class="skill-tag">ST-Link</span><span class="skill-tag">Digtal Multimeter</span></div>
-          <span class="skill-tag">RPS</span></div>
+          <h3 style="display: flex; align-items: center;"><i class="fas fa-search-plus" style="color: var(--secondary-accent); margin-right: 8px;"></i> Debugging & Tools</h3>
+          <div class="skill-items"><span class="skill-tag">ST-Link</span><span class="skill-tag">Digital Multimeter</span><span class="skill-tag">RPS</span></div>
         </div>
       </div>
       <p class="text-secondary" style="margin-top:1rem;"><span style="color:var(--secondary-accent);">▶</span>
         Bare‑metal · interrupt‑driven · real‑time · hardware‑software integration</p>
+    </div>
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator">
+      <div class="scroll-mouse">
+        <div class="scroll-wheel"></div>
+      </div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- INTERNSHIP -->
+  <section id="internship" class="section" data-section="internship">
+    <div class="glass-card">
+      <h2><span class="accent">Internship</span></h2>
+      <div class="experience-card" style="position: relative; padding: 2rem; background: var(--card-bg); border: var(--card-border); border-radius: 16px; margin-top: 1.5rem; overflow: hidden;">
+        <div class="grid-overlay"></div>
+        <div class="color-orb orb-purple" style="top: -50px; right: -50px;"></div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; position: relative; z-index: 2; margin-bottom: 1.5rem;">
+          <div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #fff;">Firmware Developer Intern</h3>
+            <div style="color: var(--primary-accent); font-weight: 500; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-building"></i> Elamani Tech Pvt. Ltd | R&D Department
+            </div>
+          </div>
+          <div class="year-badge" style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); padding: 0.4rem 1rem; border-radius: 20px; color: var(--primary-accent); font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; height: fit-content;">
+            <i class="fas fa-calendar-alt"></i> Mar 2026 — June 2026
+          </div>
+        </div>
+
+        <div style="position: relative; z-index: 2;">
+          <ul style="list-style-type: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem;">
+            <li style="display: flex; gap: 1rem; align-items: flex-start;">
+              <i class="fas fa-microchip" style="color: var(--secondary-accent); margin-top: 0.3rem;"></i>
+              <p style="color: var(--text-secondary); margin: 0; line-height: 1.6;">
+                <strong style="color: #fff;">Hardware Reverse Engineering:</strong> Reverse-engineered a commercial delivery robot's embedded hardware architecture, identifying MCU peripherals, sensor interfaces, communication buses, and control mechanisms used in the system.
+              </p>
+            </li>
+            <li style="display: flex; gap: 1rem; align-items: flex-start;">
+              <i class="fas fa-robot" style="color: var(--secondary-accent); margin-top: 0.3rem;"></i>
+              <p style="color: var(--text-secondary); margin: 0; line-height: 1.6;">
+                <strong style="color: #fff;">Project – Car Lupa:</strong> Developed a bare-metal STM32-based robotic platform using Embedded C, focusing on low-level driver development, peripheral interfacing, and system integration.
+              </p>
+            </li>
+          </ul>
+
+          <div class="tech-badges" style="margin-top: 1.5rem; justify-content: flex-start;">
+            <span class="tech-badge">STM32</span>
+            <span class="tech-badge">Embedded C</span>
+            <span class="tech-badge">Hardware Architecture</span>
+            <span class="tech-badge">Bare-metal</span>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- Scroll indicator -->
     <div class="scroll-indicator">
@@ -3211,8 +3273,7 @@
                 <span class="tech-badge">Arduino</span><span class="tech-badge">HC-05</span><span
                   class="tech-badge">PWM</span><span class="tech-badge">L298N</span>
               </div>
-              <div class="project-desc">My Vision-Based AI Robot uses advanced computer vision to recognize real-time
-                hand gestures and control movement wirelessly.</div>
+              <div class="project-desc">Developed an AI-powered hand-tracking robotic wheelchair that uses MediaPipe and computer vision to recognize real-time hand gestures and wirelessly control wheelchair movement via Bluetooth communication, enabling intuitive touch-free navigation.</div>
 
               <div class="tech-stats-row">
                 <div class="tech-stat"><span class="tech-stat-label">Platform</span><span
@@ -3249,8 +3310,7 @@
                   class="tech-badge">USART</span><span class="tech-badge">SPI Flash</span><span class="tech-badge">Low
                   Power</span>
               </div>
-              <div class="project-desc">Acquired GPS & analog sensor data using ADC, displayed via USART2, stored in
-                W25Q64 SPI flash.</div>
+              <div class="project-desc">Developed a bare-metal STM32 GPS data logger with interrupt-driven UART communication for real-time GPS data acquisition and serial monitoring. Implemented NMEA data parsing and persistent storage in external SPI Flash memory using custom low-level drivers for reliable embedded data logging.</div>
 
               <div class="tech-stats-row">
                 <div class="tech-stat"><span class="tech-stat-label">Platform</span><span class="tech-stat-val">STM32
@@ -3281,26 +3341,23 @@
                 <span class="terminal-index">[ 03 / 03 ]</span>
               </div>
 
-              <div class="project-title">ExpiraTrack Food Monitoring</div>
+              <div class="project-title">STM32 FreeRTOS-Based Elevator Controller</div>
               <div class="tech-badges">
-                <span class="tech-badge">CSS</span><span class="tech-badge">MySQL</span><span
-                  class="tech-badge">GenAI</span><span class="tech-badge">Buzzer</span>
+                <span class="tech-badge">STM32F411RE</span><span class="tech-badge">FreeRTOS</span><span
+                  class="tech-badge">CMSIS-RTOS2</span><span class="tech-badge">Embedded C</span><span class="tech-badge">I2C LCD</span><span class="tech-badge">PWM</span><span class="tech-badge">EXTI</span>
               </div>
-              <div class="project-desc">A web-based food monitoring system that tracks expiration dates and provides
-                alerts and It is Created by the AI Tools.</div>
+              <div class="project-desc">Developed a real-time elevator control system using STM32 and FreeRTOS, implementing multi-tasking architecture for floor request handling, motor control, door operation, display management, and safety monitoring. Utilized message queues, event flags, interrupt-driven inputs, and a finite state machine to coordinate elevator movement, door control, emergency handling, and real-time status updates on an LCD display.</div>
 
               <div class="tech-stats-row">
-                <div class="tech-stat"><span class="tech-stat-label">Frontend</span><span class="tech-stat-val">Vanilla
-                    JS</span></div>
-                <div class="tech-stat"><span class="tech-stat-label">Backend</span><span
-                    class="tech-stat-val">MySQL</span></div>
-                <div class="tech-stat"><span class="tech-stat-label">Addon</span><span class="tech-stat-val">GenAI
-                    Tools</span></div>
+                <div class="tech-stat"><span class="tech-stat-label">Platform</span><span class="tech-stat-val">STM32F411RE</span></div>
+                <div class="tech-stat"><span class="tech-stat-label">OS</span><span
+                    class="tech-stat-val">FreeRTOS</span></div>
+                <div class="tech-stat"><span class="tech-stat-label">Peripherals</span><span class="tech-stat-val">PWM, I2C, EXTI</span></div>
               </div>
 
               <div class="project-actions">
-                <a href="assets/ExpiraTrack.mp4" target="_blank" class="project-btn"><i class="fas fa-video"></i> Demo Vid</a>
-                <a href="https://github.com/Kathirvel-25/ExpiraTrack" target="_blank" rel="noopener noreferrer"
+                <a href="#" target="_blank" class="project-btn"><i class="fas fa-video"></i> Demo Vid</a>
+                <a href="https://github.com/Kathirvel-25/STM32F411RE-RTOS-Elevator-System.git" target="_blank" rel="noopener noreferrer"
                   class="github-icon-link"><i class="fab fa-github"></i></a>
               </div>
             </div>
